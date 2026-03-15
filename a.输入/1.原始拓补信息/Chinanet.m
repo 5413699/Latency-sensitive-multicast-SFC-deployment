@@ -1,0 +1,72 @@
+function topology = Chinanet()
+
+
+% topology =[0  Inf  Inf  1097349  Inf  Inf  Inf  Inf  Inf  Inf  Inf  Inf  Inf  1251073  Inf  Inf  Inf  Inf  Inf  Inf  Inf  Inf  Inf  Inf  Inf  Inf  Inf  Inf  Inf  Inf  Inf  Inf  Inf  Inf  2564262  Inf  Inf;
+%           Inf  0  Inf  Inf  Inf  Inf  Inf  Inf  Inf  Inf  Inf  Inf  Inf  Inf  Inf  Inf  507861  Inf  Inf  Inf  Inf  Inf  Inf  Inf  Inf  Inf  Inf  Inf  Inf  Inf  Inf  Inf  Inf  Inf  Inf  1183510  Inf  Inf;
+%           Inf  Inf  0  Inf  Inf  Inf  Inf  Inf  Inf  Inf  Inf  Inf  Inf  Inf  Inf  Inf  Inf  Inf  Inf  Inf  Inf  Inf  Inf  Inf  Inf  Inf  Inf  Inf  Inf  1077360  Inf  Inf  Inf  Inf  Inf  Inf  Inf  Inf;
+%           1097349  Inf  Inf  0  Inf  Inf  Inf  Inf  Inf  Inf  Inf  Inf  Inf  Inf  Inf  Inf  Inf  Inf  Inf  Inf  Inf  Inf  Inf  Inf  Inf  Inf  Inf  Inf  Inf  Inf  Inf  Inf  Inf  Inf  Inf  Inf  Inf  Inf;
+%           Inf  Inf  Inf  Inf  0  Inf  Inf  Inf  731929  Inf  Inf  Inf  Inf  Inf  Inf  Inf  Inf  Inf  Inf  Inf  Inf  Inf  Inf  Inf  Inf  Inf  Inf  Inf  Inf  Inf  Inf  Inf  Inf  Inf  Inf  Inf  Inf  Inf;
+%           Inf  Inf  Inf  Inf  Inf  0  Inf  Inf  Inf  Inf  Inf  Inf  Inf  Inf  Inf  Inf  Inf  Inf  Inf  Inf  Inf  Inf  Inf  Inf  Inf  Inf  Inf  Inf  Inf  Inf  Inf  Inf  Inf  Inf  440086  Inf  Inf  Inf;
+%           Inf  Inf  Inf  Inf  Inf  Inf  0  Inf  Inf  Inf  Inf  Inf  Inf  Inf  Inf  Inf  517385  Inf  Inf  Inf  Inf  Inf  Inf  Inf  Inf  Inf  Inf  Inf  Inf  Inf  Inf  Inf  Inf  Inf  Inf  401984  Inf  Inf;
+% Inf,Inf,Inf,Inf,Inf,Inf,Inf,0,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,265626.286472896,Inf,Inf;
+% Inf,Inf,Inf,Inf,731929.106503330,Inf,Inf,Inf,0,80450.8852942024,Inf,Inf,Inf,Inf,1658027.65954568,Inf,1218578.71240591,Inf,Inf,2003280.18109100,163523.660828082,689670.702993764,402208.448945799,270343.199393927,1212209.65551279,Inf,Inf,606640.760938230,Inf,Inf,Inf,Inf,Inf,Inf,962468.100819169,1068257.60352113,Inf,Inf;
+% Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,80450.8852942024,0,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,193076.507656545,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf;
+% Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,0,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,1046029.74143410,Inf,Inf,506153.707275002,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf;
+% Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,0,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,293412.010956309,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf;
+% Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,0,Inf,522496.108110645,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,763444.385458459,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf;
+% Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,0,268782.082213653,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,978901.672677967,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf;
+% 1251073.77204239,Inf,Inf,Inf,Inf,Inf,Inf,Inf,1658027.65954568,Inf,Inf,Inf,522496.108110645,268782.082213653,0,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,1404248.15823747,1237622.45387023,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf;
+% Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,0,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,1090006.86194361,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf;
+% Inf,507861.072301573,Inf,Inf,Inf,Inf,517385.830861684,Inf,1218578.71240591,Inf,Inf,Inf,Inf,Inf,Inf,Inf,0,Inf,Inf,Inf,Inf,646370.129730092,Inf,948352.664197798,1308231.51878745,Inf,Inf,Inf,699592.482069513,2118052.03482256,Inf,Inf,Inf,Inf,Inf,912319.036440713,767019.179149956,524965.983570565;
+% Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,0,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,621965.226301287,Inf,Inf;
+% Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,0,Inf,Inf,1236053.54393564,Inf,Inf,454966.739438372,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf;
+% Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,2003280.18109100,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,0,Inf,Inf,Inf,Inf,1484998.01932906,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,1804402.18364281,Inf,Inf;
+% Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,163523.660828082,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,0,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf;
+% Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,689670.702993764,Inf,1046029.74143410,293412.010956309,Inf,Inf,Inf,Inf,646370.129730092,Inf,1236053.54393564,Inf,Inf,0,Inf,458902.350283383,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,1054600.03711104,Inf,Inf;
+% Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,402208.448945799,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,0,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf;
+% Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,270343.199393927,193076.507656545,Inf,Inf,Inf,Inf,1404248.15823747,Inf,948352.664197798,Inf,Inf,Inf,Inf,458902.350283383,Inf,0,Inf,Inf,669170.429277951,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,898221.299117680,Inf,Inf;
+% Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,1212209.65551279,Inf,506153.707275002,Inf,763444.385458459,978901.672677967,1237622.45387023,1090006.86194361,1308231.51878745,Inf,454966.739438372,1484998.01932906,Inf,Inf,Inf,Inf,0,514391.905054892,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,1820203.85326040,1890380.55397845,Inf,Inf;
+% Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,514391.905054892,0,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf;
+% Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,669170.429277951,Inf,Inf,0,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf;
+% Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,606640.760938230,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,0,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf;
+% Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,699592.482069513,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,0,Inf,Inf,Inf,Inf,Inf,Inf,1326985.93533664,Inf,Inf;
+% Inf,Inf,1077360.58272094,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,2118052.03482256,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,0,Inf,Inf,Inf,Inf,Inf,2412701.82506663,Inf,Inf;
+% Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,0,Inf,Inf,Inf,Inf,1057398.87123599,Inf,Inf;
+% Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,0,Inf,Inf,Inf,860046.518773168,Inf,Inf;
+% Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,0,Inf,Inf,627547.306543061,Inf,Inf;
+% Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,0,383101.505235222,Inf,Inf,Inf;
+% Inf,Inf,Inf,Inf,Inf,440086.548431889,Inf,Inf,962468.100819169,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,1820203.85326040,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,383101.505235222,0,108213.873846855,Inf,Inf;
+% 2564262.94564025,1183510.38580166,Inf,Inf,Inf,Inf,401984.160622373,265626.286472896,1068257.60352113,Inf,Inf,Inf,Inf,Inf,Inf,Inf,912319.036440713,621965.226301287,Inf,1804402.18364281,Inf,1054600.03711104,Inf,898221.299117680,1890380.55397845,Inf,Inf,Inf,1326985.93533664,2412701.82506663,1057398.87123599,860046.518773168,627547.306543061,Inf,108213.873846855,0,414338.747648264,886595.143814688;
+% Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,767019.179149956,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,414338.747648264,0,Inf;
+% Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,524965.983570565,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,Inf,886595.143814688,Inf,0];
+
+% topology = [ Inf 2100 3000  Inf  Inf  Inf  Inf 4800  Inf  Inf  Inf  Inf  Inf  Inf ;
+% 			2100  Inf 1200 1500  Inf  Inf  Inf  Inf  Inf  Inf  Inf  Inf  Inf  Inf ;
+% 			3000 1200  Inf  Inf  Inf 3600  Inf  Inf  Inf  Inf  Inf  Inf  Inf  Inf ;
+% 			 Inf 1500  Inf  Inf 1200  Inf  Inf  Inf  Inf  Inf 3900  Inf  Inf  Inf ;
+% 			 Inf  Inf  Inf 1200  Inf 2400 1200  Inf  Inf  Inf  Inf  Inf  Inf  Inf ;
+% 			 Inf  Inf 3600  Inf 2400  Inf  Inf  Inf  Inf 2100  Inf  Inf  Inf 3600 ;
+% 			 Inf  Inf  Inf  Inf 1200  Inf  Inf 1500  Inf 2700  Inf  Inf  Inf  Inf ;
+% 			4800  Inf  Inf  Inf  Inf  Inf 1500  Inf 1500  Inf  Inf  Inf  Inf  Inf ;
+% 			 Inf  Inf  Inf  Inf  Inf  Inf  Inf 1500  Inf 1500  Inf  600  600  Inf ;
+% 			 Inf  Inf  Inf  Inf  Inf 2100 2700  Inf 1500  Inf  Inf  Inf  Inf  Inf ;
+% 			 Inf  Inf  Inf 3900  Inf  Inf  Inf  Inf  Inf  Inf  Inf 1200 1500  Inf ;
+% 			 Inf  Inf  Inf  Inf  Inf  Inf  Inf  Inf  600  Inf 1200  Inf  Inf  600 ;
+% 			 Inf  Inf  Inf  Inf  Inf  Inf  Inf  Inf  600  Inf 1500  Inf  Inf  300 ;
+% 			 Inf  Inf  Inf  Inf  Inf 3600  Inf  Inf  Inf  Inf  Inf  600  300  Inf]./2;
+         
+     topology = [ Inf   1   1   Inf Inf Inf Inf 1   Inf Inf Inf Inf Inf Inf ;
+                   1    Inf 1   1   Inf Inf Inf Inf Inf Inf Inf Inf Inf Inf ;
+                   1    1   Inf Inf Inf 1   Inf Inf Inf Inf Inf Inf Inf Inf ;
+                  Inf   1   Inf Inf 1   Inf Inf Inf Inf Inf 1   Inf Inf Inf ;
+                  Inf  Inf  Inf 1  Inf 1 1  Inf  Inf  Inf  Inf  Inf  Inf  Inf ;
+                  Inf  Inf 1  Inf 1  Inf  Inf  Inf  Inf 1  Inf  Inf  Inf 1 ;
+                  Inf  Inf  Inf  Inf 1  Inf  Inf 1  Inf Inf  Inf  Inf  Inf  Inf ;
+                   1  Inf  Inf  Inf  Inf  Inf 1  Inf 1  Inf  Inf  Inf  Inf  Inf ;
+                  Inf  Inf  Inf  Inf  Inf  Inf  Inf 1  Inf 1  Inf  1  1  Inf ;
+                  Inf  Inf  Inf  Inf  Inf 1 Inf  Inf 1  Inf  Inf  Inf  Inf  Inf ;
+                  Inf  Inf  Inf 1  Inf  Inf  Inf  Inf  Inf  Inf  Inf 1 1  Inf ;
+                  Inf  Inf  Inf  Inf  Inf  Inf  Inf  Inf  1  Inf 1  Inf  Inf  1 ;
+                  Inf  Inf  Inf  Inf  Inf  Inf  Inf  Inf  1  Inf 1  Inf  Inf  1 ;
+                  Inf  Inf  Inf  Inf  Inf 1  Inf  Inf  Inf  Inf  Inf  1  1  Inf];
+end
