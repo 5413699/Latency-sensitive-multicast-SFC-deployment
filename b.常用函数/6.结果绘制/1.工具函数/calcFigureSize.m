@@ -19,8 +19,17 @@ function [figWidth, figHeight] = calcFigureSize(plotType, methodNames, cfg)
 %   - 确保最小尺寸以保证可读性
 
     if nargin < 3 || isempty(cfg)
-        cfg = getPlotCfg();
+        try
+            cfg = read_global_cfg();
+        catch
+            cfg = struct();
+        end
     end
+    if ~isfield(cfg, 'figWidth');     cfg.figWidth     = 800;  end
+    if ~isfield(cfg, 'figHeight');    cfg.figHeight    = 600;  end
+    if ~isfield(cfg, 'figWidthWide'); cfg.figWidthWide = 1500; end
+    if ~isfield(cfg, 'figWidthBar');  cfg.figWidthBar  = 900;  end
+    if ~isfield(cfg, 'figHeightBar'); cfg.figHeightBar = 550;  end
     
     % 转换为cell数组
     if isstring(methodNames)
