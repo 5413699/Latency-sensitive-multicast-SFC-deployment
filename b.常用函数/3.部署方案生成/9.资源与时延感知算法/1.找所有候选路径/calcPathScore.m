@@ -1,12 +1,21 @@
 %[text] # calcPathScore
 %[text] 计算链路综合评价
 %[text] =归一化共享度评分+归一化拥塞评分+归一化时延评分
-function pathScoreStruct = calcPathScore(Pathinfo, linkFreq, links, req, t0, deployMethodCfg)
+function pathScoreStruct = calcPathScore(Pathinfo, linkFreq, links, req, t0, deployMethodCfg, destIdx, destNum)
 
-   
+    if nargin < 7 || isempty(destIdx), destIdx = 1; end
+    if nargin < 8 || isempty(destNum), destNum = 1; end
+
     shareWeight = deployMethodCfg.shareWeight;
     congWeight = deployMethodCfg.congWeight;
     delayWeight = deployMethodCfg.delayWeight;
+
+    if isfield(deployMethodCfg, 'shareDecayMin')
+        shareDecayMin = deployMethodCfg.shareDecayMin;
+    else
+        shareDecayMin = 0;
+    end
+    shareDecayWeight = max(1 - (destIdx - 1) / max(destNum, 1), shareDecayMin);
 
     linkFreq = linkFreq(:);
     K = length(Pathinfo);
@@ -108,9 +117,9 @@ function pathScoreStruct = calcPathScore(Pathinfo, linkFreq, links, req, t0, dep
         % cong/delay：越小越好（用 1 - norm 变成"越大越好"的形式）
         if isfinite(shareNorm(k)) && isfinite(congNorm(k)) && isfinite(delayNorm(k))
             pathScoreStruct(k).totalScore = ...
-                shareWeight * shareNorm(k) + ...
+                shareWeight * shareDecayWeight * shareNorm(k) + ...
                 congWeight  * (1 - congNorm(k)) + ...
-                delayWeight     * (1 - delayNorm(k));
+                delayWeight * (1 - delayNorm(k));
         else
             pathScoreStruct(k).totalScore = -inf;
         end

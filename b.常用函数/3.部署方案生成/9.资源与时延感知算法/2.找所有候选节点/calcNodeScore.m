@@ -45,6 +45,12 @@ function nodeScoreStruct = calcNodeScore(...
     congWeight = deployMethodCfg.congWeight;
     delayWeight = deployMethodCfg.delayWeight;
     
+    if isfield(deployMethodCfg, 'shareDecayMin')
+        shareDecayMin = deployMethodCfg.shareDecayMin;
+    else
+        shareDecayMin = 0;
+    end
+    
     % 候选路径上的节点（排除源节点，因为源节点不能部署VNF）
     pathNodes = candpath.paths;
     pathLinks = candpath.link_ids;
@@ -118,7 +124,7 @@ function nodeScoreStruct = calcNodeScore(...
     % 共享潜力权重衰减因子：随已部署目的节点数量递减
     % 第1个目的节点时权重最高（共享潜力最重要）
     % 后续目的节点权重降低（因为能被共享的机会变少）
-    shareDecayWeight = max(1 - (destIdx - 1) / max(destNum, 1), 0.1);
+    shareDecayWeight = max(1 - (destIdx - 1) / max(destNum, 1), shareDecayMin);
     
     % 遍历每个候选节点计算评分
     for i = 1:numCandNodes
@@ -319,7 +325,7 @@ function nodeScoreStruct = calcNodeScore(...
         
         % 综合共享潜力（用于评估未来共享收益）
         % 注意：这里不再给当前可共享VNF加分，因为共享优势已体现在资源消耗为0
-        nodeScoreStruct(i).shareScore = (nodeShare + linkShare) * shareDecayWeight;
+        nodeScoreStruct(i).shareScore = nodeShare + linkShare;
     end
     
     % ==================== 归一化处理 ====================
@@ -373,7 +379,7 @@ function nodeScoreStruct = calcNodeScore(...
                 congWeight * (1 - memNorm(i)) + ...
                 congWeight * (1 - bwNorm(i)) + ...
                 delayWeight * (1 - delayNorm(i)) + ...
-                shareWeight * shareNorm(i);
+                shareWeight * shareDecayWeight * shareNorm(i);
         else
             nodeScoreStruct(i).totalScore = -inf;
         end

@@ -282,7 +282,7 @@ function candPlans = generateCandidatePlans(req, req_idx, KPathsNew, nodes, link
         end
         
         % 用 calcPathScore 对所有路径进行预评估，选取得分最高的K条
-        pathScoreStruct = calcPathScore(Pathinfo, linkFreq, links, req, 1, deployMethodCfg);
+        pathScoreStruct = calcPathScore(Pathinfo, linkFreq, links, req, 1, deployMethodCfg, orderIdx, destNum);
         
         % calcPathScore 返回的结果已按 totalScore 降序排列
         numPaths = min(candLinkNum, numel(pathScoreStruct));

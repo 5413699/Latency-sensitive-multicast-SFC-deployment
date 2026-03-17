@@ -37,7 +37,7 @@ function [bestPlan, simNodes, simLinks] = rdaLinkAndNodeChoice( ...
     vnfNum = numel(req.vnf);
     
     % ===================== 步骤1: 计算路径评分并排序 =====================
-    pathScoreStruct = calcPathScore(Pathinfo, linkFreq, links, req, t, deployMethodCfg);
+    pathScoreStruct = calcPathScore(Pathinfo, linkFreq, links, req, t, deployMethodCfg, dest_idx, destNum);
     
     % 取前candLinkNum条有效路径作为候选
     validPaths = find([pathScoreStruct.totalScore] > -inf);
