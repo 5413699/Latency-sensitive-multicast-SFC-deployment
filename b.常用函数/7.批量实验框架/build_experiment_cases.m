@@ -17,10 +17,10 @@ function cases = build_experiment_cases(cfg)
             continue;
         end
 
-        group_id    = char(exp.group_id);
-        topo_name   = char(exp.topo_name);
-        method_name = char(exp.method_name);
-        param_group = char(exp.param_group);
+        group_id    = excel_field_to_char(exp.group_id, 'group');
+        topo_name   = excel_field_to_char(exp.topo_name, 'topo');
+        method_name = excel_field_to_char(exp.method_name, 'method');
+        param_group = excel_field_to_char(exp.param_group, 'default');
         repeat_count = parse_scalar_number(exp.repeat_count, 1);
 
         req_ids = parse_request_set_ids(exp.request_set_ids);
@@ -81,9 +81,10 @@ function cases = build_experiment_cases(cfg)
             for rep = 1:repeat_count
                 idx = idx + 1;
 
+                disp_name = excel_field_to_char(method_cfg.display_name, method_name);
+                topo_abbr = topo_name(1:min(3, numel(topo_name)));
                 case_id = sprintf('%s_%s_%s_%s_R%d_rep%d', ...
-                    group_id, topo_name(1:min(3,end)), ...
-                    method_cfg.display_name, param_group, ...
+                    group_id, topo_abbr, disp_name, param_group, ...
                     req_ids(ri), rep);
 
                 seed = seed_base + req_ids(ri) * 1000 + rep;
@@ -93,7 +94,7 @@ function cases = build_experiment_cases(cfg)
                 c.group_id       = group_id;
                 c.topo_name      = topo_name;
                 c.method_name    = method_name;
-                c.display_name   = char(method_cfg.display_name);
+                c.display_name   = disp_name;
                 c.param_group    = param_group;
                 c.request_set_id = req_ids(ri);
                 c.repeat_id      = rep;
@@ -117,6 +118,36 @@ function cases = build_experiment_cases(cfg)
         cases = struct([]);
     else
         fprintf('已展开 %d 个实验案例\n', numel(cases));
+    end
+end
+
+function s = excel_field_to_char(raw, fallback)
+%EXCEL_FIELD_TO_CHAR  将表格/Excel 读入的单元格转为可用于 sprintf 的 char
+%   空单元格在 readtable(...,'TextType','string') 下会变成 string 的 <missing>，
+%   直接传入 sprintf 会报错，此处统一成非 missing 的 char。
+
+    if nargin < 2
+        fallback = '';
+    end
+    fb = char(string(fallback));
+
+    if iscell(raw) && ~isempty(raw)
+        raw = raw{1};
+    end
+
+    if isempty(raw) && ~(isstring(raw) || iscategorical(raw))
+        s = fb;
+        return;
+    end
+
+    t = string(raw);
+    if ~isscalar(t)
+        t = t(1);
+    end
+    if ismissing(t) || strtrim(t) == ""
+        s = fb;
+    else
+        s = char(strtrim(t));
     end
 end
 

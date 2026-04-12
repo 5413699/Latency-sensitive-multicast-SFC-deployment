@@ -18,14 +18,29 @@ function write_experiment_result(experiment_case, metrics, elapsed, status, xlsx
 
     ec = experiment_case;
 
+    tc = NaN;
+    tm = NaN;
+    tbw = NaN;
+    if isfield(ec, 'topo_total_cpu_cap')
+        tc = ec.topo_total_cpu_cap;
+    end
+    if isfield(ec, 'topo_total_mem_cap')
+        tm = ec.topo_total_mem_cap;
+    end
+    if isfield(ec, 'topo_total_link_bw_cap')
+        tbw = ec.topo_total_link_bw_cap;
+    end
+
     % ====== Sheet 1: 实验元数据 ======
     meta = table( ...
         string(ec.case_id), string(ec.group_id), string(ec.topo_name), ...
+        tc, tm, tbw, ...
         string(ec.method_name), string(ec.display_name), string(ec.param_group), ...
         ec.request_set_id, ec.repeat_id, ec.seed, ...
         string(datetime('now')), elapsed, string(status), ...
-        'VariableNames', {'case_id','group_id','topo_name','method_name', ...
-        'display_name','param_group','request_set_id','repeat_id','seed', ...
+        'VariableNames', {'case_id','group_id','topo_name', ...
+        'topo_total_cpu_cap','topo_total_mem_cap','topo_total_link_bw_cap', ...
+        'method_name','display_name','param_group','request_set_id','repeat_id','seed', ...
         'run_timestamp','elapsed_seconds','status'});
 
     append_to_sheet(xlsx_path, '实验元数据', meta);
@@ -63,12 +78,63 @@ function append_to_sheet(xlsx_path, sheet_name, tbl)
     if isfile(xlsx_path)
         try
             existing = readtable(xlsx_path, 'Sheet', sheet_name, 'TextType', 'string');
+            [existing, tbl] = align_tables_for_vertcat(existing, tbl);
             tbl = [existing; tbl];
         catch
             % Sheet 不存在，直接写
         end
     end
     writetable(tbl, xlsx_path, 'Sheet', sheet_name);
+end
+
+function [A, B] = align_tables_for_vertcat(A, B)
+%ALIGN_TABLES_FOR_VERTCAT  统一列名与顺序，便于与旧版汇总表追加合并
+    if width(A) == 0 || width(B) == 0
+        return;
+    end
+    va = A.Properties.VariableNames;
+    vb = B.Properties.VariableNames;
+    allv = [va, vb(~ismember(vb, va))];
+    A = pad_table_missing_vars(A, allv, B);
+    B = pad_table_missing_vars(B, allv, A);
+    A = A(:, allv);
+    B = B(:, allv);
+end
+
+function T = pad_table_missing_vars(T, allv, refT)
+    for i = 1:numel(allv)
+        vn = allv{i};
+        if ismember(vn, T.Properties.VariableNames)
+            continue;
+        end
+        if ismember(vn, refT.Properties.VariableNames) && height(refT) >= 1
+            fill0 = default_missing_like(refT.(vn)(1, :));
+        else
+            fill0 = NaN;
+        end
+        T.(vn) = repmat(fill0, height(T), 1);
+    end
+end
+
+function m = default_missing_like(x)
+    if isempty(x)
+        m = NaN;
+        return;
+    end
+    if isnumeric(x)
+        m = NaN(1, size(x, 2));
+    elseif islogical(x)
+        m = false(1, size(x, 2));
+    elseif isstring(x)
+        m = strings(1, size(x, 2));
+        m(:) = "";
+    elseif isdatetime(x)
+        m = NaT(1, size(x, 2));
+    elseif iscell(x)
+        m = {''};
+    else
+        m = NaN;
+    end
 end
 
 function s = ensure_summary_struct(metrics, experiment_case, status)

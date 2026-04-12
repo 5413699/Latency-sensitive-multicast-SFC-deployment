@@ -72,6 +72,17 @@ for i = 1:total
     result = run_single_experiment(c, topo_cache);
     topo_cache = result.topo_cache;
 
+    % 拓扑容量写入元数据：合并到 case 供 write_experiment_result 使用
+    if isfield(result, 'topo_total_cpu_cap')
+        c.topo_total_cpu_cap = result.topo_total_cpu_cap;
+        c.topo_total_mem_cap = result.topo_total_mem_cap;
+        c.topo_total_link_bw_cap = result.topo_total_link_bw_cap;
+    else
+        c.topo_total_cpu_cap = NaN;
+        c.topo_total_mem_cap = NaN;
+        c.topo_total_link_bw_cap = NaN;
+    end
+
     % 写入结果
     if strcmp(result.status, 'success')
         write_experiment_result(c, result.metrics, result.elapsed, result.status, summary_xlsx);

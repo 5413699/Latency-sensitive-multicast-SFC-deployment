@@ -152,6 +152,9 @@ function nodeScoreStruct = calcNodeScore(...
         
         node = nodes(nodeId);
         
+        % 将 currentTime 取整用于数组索引（时延累积可能导致浮点数）
+        currentTimeIdx = max(1, round(currentTime));
+        
         % ========== 检查VNF是否可共享 ==========
         % 共享检测：检查该节点是否已有相同请求的相同VNF实例
         canShareVnf = checkVnfShareable(node, req.id, vnfId, currentTime);
@@ -163,7 +166,7 @@ function nodeScoreStruct = calcNodeScore(...
             nodeScoreStruct(i).cpuScore = 0;
         else
             % 需要新部署：检查资源是否足够
-            cpu_avail = node.cpu(currentTime);
+            cpu_avail = node.cpu(currentTimeIdx);
             if cpu_avail < cpu_need
                 % 资源不足，标记为无效
                 nodeScoreStruct(i).isValid = false;
@@ -179,7 +182,7 @@ function nodeScoreStruct = calcNodeScore(...
             % VNF可共享：内存消耗为0
             nodeScoreStruct(i).memScore = 0;
         else
-            mem_avail = node.mem(currentTime);
+            mem_avail = node.mem(currentTimeIdx);
             if mem_avail < mem_need
                 nodeScoreStruct(i).isValid = false;
                 nodeScoreStruct(i).memScore = inf;
@@ -279,7 +282,7 @@ function nodeScoreStruct = calcNodeScore(...
         else
             % 非共享：需要真实的FIFO排队
             % 计算处理时长（到达时刻确定）
-            t_safe = min(max(arriveTime, 1), size(node.delay, 1));
+            t_safe = min(max(round(arriveTime), 1), size(node.delay, 1));
             proc_duration = node.delay(t_safe);
             
             % 【核心】使用 fifo_find_start_time 逻辑估计排队等待

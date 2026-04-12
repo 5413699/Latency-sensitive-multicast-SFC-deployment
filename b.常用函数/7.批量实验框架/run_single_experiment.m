@@ -15,6 +15,8 @@ function result = run_single_experiment(experiment_case, topo_cache)
 %     .elapsed     -- 耗时(秒)
 %     .status      -- 'success' 或 'error'
 %     .error_msg   -- 错误信息（成功时为空）
+%     .topo_total_cpu_cap / .topo_total_mem_cap / .topo_total_link_bw_cap
+%                   -- 拓扑节点 CPU/内存容量之和、链路带宽容量之和（prepare_topo 成功后即有值）
 
     if nargin < 2 || isempty(topo_cache)
         topo_cache = struct();
@@ -36,6 +38,11 @@ function result = run_single_experiment(experiment_case, topo_cache)
 
         % 1) 准备拓扑
         [topo_data, topo_cache] = prepare_topo(ec.topo_cfg, topo_cache);
+
+        caps = topo_capacity_totals(topo_data.nodes, topo_data.links);
+        result.topo_total_cpu_cap = caps.cpu;
+        result.topo_total_mem_cap = caps.mem;
+        result.topo_total_link_bw_cap = caps.bw;
 
         % 2) 准备请求
         [requests, sortedRequests] = prepare_requests( ...
@@ -67,5 +74,46 @@ function result = run_single_experiment(experiment_case, topo_cache)
         result.elapsed = toc(t_start);
         result.error_msg = sprintf('%s: %s', ME.identifier, ME.message);
         fprintf('  实验失败: %s\n', result.error_msg);
+    end
+end
+
+function caps = topo_capacity_totals(nodes, links)
+%TOPO_CAPACITY_TOTALS  拓扑资源总量：节点 CPU/内存容量之和、链路带宽容量之和
+    caps = struct('cpu', NaN, 'mem', NaN, 'bw', NaN);
+    if isempty(nodes)
+        return;
+    end
+    s_cpu = 0;
+    s_mem = 0;
+    for i = 1:numel(nodes)
+        if isfield(nodes(i), 'cpu_cap') && ~isempty(nodes(i).cpu_cap)
+            s_cpu = s_cpu + sum_local_cap(nodes(i).cpu_cap);
+        end
+        if isfield(nodes(i), 'mem_cap') && ~isempty(nodes(i).mem_cap)
+            s_mem = s_mem + sum_local_cap(nodes(i).mem_cap);
+        end
+    end
+    caps.cpu = s_cpu;
+    caps.mem = s_mem;
+    s_bw = 0;
+    if ~isempty(links)
+        for e = 1:numel(links)
+            if isfield(links(e), 'bandwidth_cap') && ~isempty(links(e).bandwidth_cap)
+                s_bw = s_bw + sum_local_cap(links(e).bandwidth_cap);
+            end
+        end
+    end
+    caps.bw = s_bw;
+end
+
+function s = sum_local_cap(x)
+    if iscell(x)
+        x = x{1};
+    end
+    if isempty(x)
+        s = 0;
+    else
+        xx = double(x(:));
+        s = sum(xx(~isnan(xx)));
     end
 end
