@@ -21,13 +21,14 @@ function plot_acceptance_rate_bar(compare_tbl, outDir, cfg)
     data = compare_tbl(compare_tbl.metric_name == "acceptance_rate", :);
     if isempty(data); warning('无 acceptance_rate 数据'); return; end
 
-    method_names = unique(data.display_name, 'stable');
+    legend_col = get_legend_col(data);
+    method_names = unique(data.(legend_col), 'stable');
     M = numel(method_names);
 
     means = zeros(M, 1);
     errs  = zeros(M, 1);
     for i = 1:M
-        row = data(data.display_name == method_names(i), :);
+        row = data(data.(legend_col) == method_names(i), :);
         if ~isempty(row)
             means(i) = row.mean(1);
             errs(i)  = row.std(1);
@@ -69,4 +70,12 @@ function cfg = default_cfg()
     cfg = struct('figVisible','off','lineWidth',1.8,'fontSize',12, ...
                  'saveSvg',true,'svgBackground','none','slackMode','ratio', ...
                  'outDir',fullfile('c.输出','5.结果图保存'),'saveMat',false);
+end
+
+function legend_col = get_legend_col(tbl)
+    if ismember('legend_name', tbl.Properties.VariableNames)
+        legend_col = 'legend_name';
+    else
+        legend_col = 'display_name';
+    end
 end

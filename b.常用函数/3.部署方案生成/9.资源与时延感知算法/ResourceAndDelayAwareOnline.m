@@ -253,15 +253,21 @@ function candPlans = generateCandidatePlans(req, req_idx, KPathsNew, nodes, link
     usedNodes = [];                % 已建树使用的节点集合
     globalNodeFreq = [];           % 全局节点频率（首次计算后复用）
     globalLinkFreq = [];           % 全局链路频率（首次计算后复用）
+    enableDynamicDestAccess = cfg_bool(deployMethodCfg, 'enableDynamicDestAccess', true);
     
     % 为每个目的节点收集候选路径方案
     destPathPlans = cell(destNum, 1);
     
     % 逐个选择目的节点加入树
     for orderIdx = 1:destNum
-        % 【关键】每次根据当前已建树状态选择下一个目的节点
-        [nextDest, ~, globalNodeFreq, globalLinkFreq] = calcDestOrderBySharePotential( ...
-            src, remainDests, KPathsNew, links, nodes, usedLinks, usedNodes, globalNodeFreq, globalLinkFreq);
+        if enableDynamicDestAccess
+            % 【关键】每次根据当前已建树状态选择下一个目的节点
+            [nextDest, ~, globalNodeFreq, globalLinkFreq] = calcDestOrderBySharePotential( ...
+                src, remainDests, KPathsNew, links, nodes, usedLinks, usedNodes, globalNodeFreq, globalLinkFreq);
+        else
+            % 消融模式：按请求原始目的节点顺序接入，不做动态重排
+            nextDest = dests(orderIdx);
+        end
         
         % 记录加入顺序
         orderedDests(orderIdx) = nextDest;
@@ -527,6 +533,35 @@ function newPlan = createEmptyPlan(req_id, destNum, vnfNum, linkNum)
         'placeLinks',   zeros(destNum, linkNum), ...
         'vnfNode',      zeros(destNum, vnfNum) ...
     );
+end
+
+function value = cfg_bool(cfg, fieldName, defaultValue)
+%CFG_BOOL Parse optional boolean config values from Excel/MATLAB structs.
+    value = defaultValue;
+    if ~isfield(cfg, fieldName)
+        return;
+    end
+
+    raw = cfg.(fieldName);
+    if isempty(raw) || (isnumeric(raw) && any(isnan(raw(:))))
+        return;
+    end
+
+    if islogical(raw)
+        value = raw(1);
+    elseif isnumeric(raw)
+        value = raw(1) ~= 0;
+    else
+        text = lower(strtrim(char(string(raw))));
+        if isempty(text) || strcmp(text, '<missing>') || strcmp(text, 'nan')
+            return;
+        end
+        if any(strcmp(text, {'1','true','on','yes','y','enable','enabled'}))
+            value = true;
+        elseif any(strcmp(text, {'0','false','off','no','n','disable','disabled'}))
+            value = false;
+        end
+    end
 end
 
 %[appendix]{"version":"1.0"}

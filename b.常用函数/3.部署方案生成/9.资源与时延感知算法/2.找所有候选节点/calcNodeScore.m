@@ -124,7 +124,11 @@ function nodeScoreStruct = calcNodeScore(...
     % 共享潜力权重衰减因子：随已部署目的节点数量递减
     % 第1个目的节点时权重最高（共享潜力最重要）
     % 后续目的节点权重降低（因为能被共享的机会变少）
-    shareDecayWeight = max(1 - (destIdx - 1) / max(destNum, 1), shareDecayMin);
+    if cfg_bool(deployMethodCfg, 'enableShareDecay', true)
+        shareDecayWeight = max(1 - (destIdx - 1) / max(destNum, 1), shareDecayMin);
+    else
+        shareDecayWeight = 1;
+    end
     
     % 遍历每个候选节点计算评分
     for i = 1:numCandNodes
@@ -539,6 +543,35 @@ function ready_time = findSharedReadyTime(node, req_id, vnf_id)
     mask = ([node.tasks.req_id] == req_id) & ([node.tasks.vnf_id] == vnf_id);
     if any(mask)
         ready_time = min([node.tasks(mask).t_end]);
+    end
+end
+
+function value = cfg_bool(cfg, fieldName, defaultValue)
+%CFG_BOOL Parse optional boolean config values from Excel/MATLAB structs.
+    value = defaultValue;
+    if ~isfield(cfg, fieldName)
+        return;
+    end
+
+    raw = cfg.(fieldName);
+    if isempty(raw) || (isnumeric(raw) && any(isnan(raw(:))))
+        return;
+    end
+
+    if islogical(raw)
+        value = raw(1);
+    elseif isnumeric(raw)
+        value = raw(1) ~= 0;
+    else
+        text = lower(strtrim(char(string(raw))));
+        if isempty(text) || strcmp(text, '<missing>') || strcmp(text, 'nan')
+            return;
+        end
+        if any(strcmp(text, {'1','true','on','yes','y','enable','enabled'}))
+            value = true;
+        elseif any(strcmp(text, {'0','false','off','no','n','disable','disabled'}))
+            value = false;
+        end
     end
 end
 

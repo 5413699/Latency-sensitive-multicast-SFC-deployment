@@ -40,7 +40,7 @@ function [bestPlan, bestIdx, rankedPlans, rankOrder] = planEvaluate(candPlans, d
         if isfield(plan, 'totalScore') && ~isempty(plan.totalScore)
             scores(i) = plan.totalScore;
         elseif isfield(plan, 'success') && plan.success && isfield(plan, 'e2eDelay')
-            % 兼容旧格式（来自rdaLinkAndNodeChoice）
+            % 兼容历史候选方案格式
             scores(i) = -plan.e2eDelay;  % 时延越小越好
         else
             % 无得分信息，使用跳数估算

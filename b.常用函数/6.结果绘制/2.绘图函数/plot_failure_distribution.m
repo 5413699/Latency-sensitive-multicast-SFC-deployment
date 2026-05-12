@@ -20,7 +20,8 @@ function plot_failure_distribution(fail_tbl, outDir, cfg)
 
     if isempty(fail_tbl); warning('无失败分布数据'); return; end
 
-    method_names = unique(fail_tbl.display_name, 'stable');
+    legend_col = get_legend_col(fail_tbl);
+    method_names = unique(fail_tbl.(legend_col), 'stable');
     fail_types   = unique(fail_tbl.fail_type, 'stable');
     M = numel(method_names);
     R = numel(fail_types);
@@ -32,7 +33,7 @@ function plot_failure_distribution(fail_tbl, outDir, cfg)
     countMat = zeros(M, R);
     for m = 1:M
         for r = 1:R
-            mask = fail_tbl.display_name == method_names(m) & ...
+            mask = fail_tbl.(legend_col) == method_names(m) & ...
                    fail_tbl.fail_type == fail_types(r);
             rows = fail_tbl(mask, :);
             if ~isempty(rows)
@@ -95,4 +96,12 @@ function cfg = default_cfg()
     cfg = struct('figVisible','off','lineWidth',1.8,'fontSize',12, ...
                  'saveSvg',true,'svgBackground','none','slackMode','ratio', ...
                  'outDir',fullfile('c.输出','5.结果图保存'),'saveMat',false);
+end
+
+function legend_col = get_legend_col(tbl)
+    if ismember('legend_name', tbl.Properties.VariableNames)
+        legend_col = 'legend_name';
+    else
+        legend_col = 'display_name';
+    end
 end

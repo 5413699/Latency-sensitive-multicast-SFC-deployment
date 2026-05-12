@@ -39,7 +39,8 @@ function plot_avg_metric_vs_success(curve_tbl, metric_field, y_label, outDir, cf
         return;
     end
 
-    method_names = unique(curve_tbl.display_name, 'stable');
+    legend_col = get_legend_col(curve_tbl);
+    method_names = unique(curve_tbl.(legend_col), 'stable');
     M = numel(method_names);
 
     [figW, figH] = calcFigureSize('single', cellstr(method_names), cfg);
@@ -47,7 +48,7 @@ function plot_avg_metric_vs_success(curve_tbl, metric_field, y_label, outDir, cf
     hold on;
 
     for m = 1:M
-        mask = curve_tbl.display_name == method_names(m);
+        mask = curve_tbl.(legend_col) == method_names(m);
         grp  = curve_tbl(mask, :);
         x    = grp.success_index;
         y    = grp.(mean_col);
@@ -72,4 +73,12 @@ function cfg = default_cfg()
     cfg = struct('figVisible','off','lineWidth',1.8,'fontSize',12, ...
                  'saveSvg',true,'svgBackground','none','slackMode','ratio', ...
                  'outDir',fullfile('c.输出','5.结果图保存'),'saveMat',false);
+end
+
+function legend_col = get_legend_col(tbl)
+    if ismember('legend_name', tbl.Properties.VariableNames)
+        legend_col = 'legend_name';
+    else
+        legend_col = 'display_name';
+    end
 end

@@ -15,7 +15,11 @@ function pathScoreStruct = calcPathScore(Pathinfo, linkFreq, links, req, t0, dep
     else
         shareDecayMin = 0;
     end
-    shareDecayWeight = max(1 - (destIdx - 1) / max(destNum, 1), shareDecayMin);
+    if cfg_bool(deployMethodCfg, 'enableShareDecay', true)
+        shareDecayWeight = max(1 - (destIdx - 1) / max(destNum, 1), shareDecayMin);
+    else
+        shareDecayWeight = 1;
+    end
 
     linkFreq = linkFreq(:);
     K = length(Pathinfo);
@@ -131,6 +135,35 @@ function pathScoreStruct = calcPathScore(Pathinfo, linkFreq, links, req, t0, dep
     [~, order]  = sortrows([-totalScores, hopsVec], [1 2]);
     pathScoreStruct = pathScoreStruct(order);
 
+end
+
+function value = cfg_bool(cfg, fieldName, defaultValue)
+%CFG_BOOL Parse optional boolean config values from Excel/MATLAB structs.
+    value = defaultValue;
+    if ~isfield(cfg, fieldName)
+        return;
+    end
+
+    raw = cfg.(fieldName);
+    if isempty(raw) || (isnumeric(raw) && any(isnan(raw(:))))
+        return;
+    end
+
+    if islogical(raw)
+        value = raw(1);
+    elseif isnumeric(raw)
+        value = raw(1) ~= 0;
+    else
+        text = lower(strtrim(char(string(raw))));
+        if isempty(text) || strcmp(text, '<missing>') || strcmp(text, 'nan')
+            return;
+        end
+        if any(strcmp(text, {'1','true','on','yes','y','enable','enabled'}))
+            value = true;
+        elseif any(strcmp(text, {'0','false','off','no','n','disable','disabled'}))
+            value = false;
+        end
+    end
 end
 
 %[text] 

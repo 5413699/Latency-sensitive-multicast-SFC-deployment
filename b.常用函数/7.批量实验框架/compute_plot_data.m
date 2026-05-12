@@ -6,6 +6,7 @@ function compute_plot_data(summary_xlsx, plot_xlsx)
 %
 % 读取 实验结果汇总.xlsx 的三个 sheet，按 (topo_name, display_name, param_group)
 % 分组，对多次重复实验计算 mean/std/CI95，写入 绘图数据.xlsx。
+% 输出表额外写入 legend_name，用于区分同一方法的不同参数组/消融组。
 
     if nargin < 1 || isempty(summary_xlsx)
         summary_xlsx = fullfile('c.输出', '实验结果汇总.xlsx');
@@ -99,7 +100,8 @@ function tbl = compute_summary_sheet(data)
             vals = data.(mn)(mask);
             vals = vals(~isnan(vals));
             [m, s, lo, hi, n] = stat_summary(vals);
-            rows{end+1} = {topo_groups(g), display_groups(g), param_groups(g), ...
+            legend_name = make_legend_name(display_groups(g), param_groups(g));
+            rows{end+1} = {topo_groups(g), display_groups(g), param_groups(g), legend_name, ...
                            string(mn), m, s, lo, hi, n}; %#ok<AGROW>
         end
     end
@@ -109,7 +111,7 @@ function tbl = compute_summary_sheet(data)
         return;
     end
     tbl = cell2table(vertcat(rows{:}), 'VariableNames', ...
-        {'topo_name','display_name','param_group','metric_name', ...
+        {'topo_name','display_name','param_group','legend_name','metric_name', ...
          'mean','std','ci95_lo','ci95_hi','n'});
 end
 
@@ -149,7 +151,8 @@ function tbl = compute_curve_sheet(detail)
         end
 
         for k = 1:max_len
-            row = {topo_groups(g), display_groups(g), param_groups(g), k};
+            legend_name = make_legend_name(display_groups(g), param_groups(g));
+            row = {topo_groups(g), display_groups(g), param_groups(g), legend_name, k};
             for fi = 1:nf
                 vals = squeeze(mat(k, fi, :));
                 vals = vals(~isnan(vals));
@@ -169,7 +172,7 @@ function tbl = compute_curve_sheet(detail)
     end
 
     fields = curves{1}.Properties.VariableNames;
-    col_names = {'topo_name','display_name','param_group','success_index'};
+    col_names = {'topo_name','display_name','param_group','legend_name','success_index'};
     for fi = 1:numel(fields)
         fn = fields{fi};
         col_names{end+1} = [fn '_mean']; %#ok<AGROW>
@@ -248,7 +251,8 @@ function tbl = compute_failure_sheet(data)
             if ~ismember(fn, data.Properties.VariableNames); continue; end
             vals = data.(fn)(mask);
             vals = vals(~isnan(vals));
-            rows{end+1} = {topo_groups(g), display_groups(g), param_groups(g), type_labels(fi), ...
+            legend_name = make_legend_name(display_groups(g), param_groups(g));
+            rows{end+1} = {topo_groups(g), display_groups(g), param_groups(g), legend_name, type_labels(fi), ...
                            mean_safe(vals), std_safe(vals)}; %#ok<AGROW>
         end
     end
@@ -258,7 +262,7 @@ function tbl = compute_failure_sheet(data)
         return;
     end
     tbl = cell2table(vertcat(rows{:}), 'VariableNames', ...
-        {'topo_name','display_name','param_group','fail_type','count_mean','count_std'});
+        {'topo_name','display_name','param_group','legend_name','fail_type','count_mean','count_std'});
 end
 
 % ========================================================================
@@ -285,3 +289,15 @@ function m = mean_safe(vals)
     if isempty(vals); m = 0; else; m = mean(vals); end
 end
 
+function name = make_legend_name(display_name, param_group)
+    d = strtrim(string(display_name));
+    p = strtrim(string(param_group));
+    if d == ""
+        d = "method";
+    end
+    if p == ""
+        name = d;
+    else
+        name = d + "-" + p;
+    end
+end
