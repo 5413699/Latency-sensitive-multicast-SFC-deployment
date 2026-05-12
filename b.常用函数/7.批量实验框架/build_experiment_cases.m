@@ -12,6 +12,10 @@ function cases = build_experiment_cases(cfg)
     for row = 1:height(cfg.experiments)
         exp = cfg.experiments(row, :);
 
+        if is_empty_experiment_row(exp)
+            continue;
+        end
+
         enabled = parse_scalar_number(exp.enabled, 1);
         if enabled == 0
             continue;
@@ -69,6 +73,9 @@ function cases = build_experiment_cases(cfg)
                     method_cfg.(fn) = pg.(fn);
                 end
             end
+        elseif ~strcmpi(param_group, 'default')
+            warning('方法 "%s" 的参数组 "%s" 在方法参数组中未找到，跳过', method_name, param_group);
+            continue;
         end
 
         seed_base = 42;
@@ -118,6 +125,40 @@ function cases = build_experiment_cases(cfg)
         cases = struct([]);
     else
         fprintf('已展开 %d 个实验案例\n', numel(cases));
+    end
+end
+
+function tf = is_empty_experiment_row(exp)
+%IS_EMPTY_EXPERIMENT_ROW  跳过 Excel 中由格式残留造成的空白行
+    vars = exp.Properties.VariableNames;
+    tf = true;
+
+    for vi = 1:numel(vars)
+        raw = exp.(vars{vi});
+        if ~is_empty_excel_value(raw)
+            tf = false;
+            return;
+        end
+    end
+end
+
+function tf = is_empty_excel_value(raw)
+    if iscell(raw)
+        if isempty(raw)
+            tf = true;
+            return;
+        end
+        raw = raw{1};
+    end
+
+    if isstring(raw) || ischar(raw) || iscategorical(raw)
+        s = string(raw);
+        tf = all(ismissing(s) | strlength(strtrim(s)) == 0);
+    elseif isnumeric(raw) || islogical(raw)
+        v = double(raw(:));
+        tf = isempty(v) || all(isnan(v));
+    else
+        tf = isempty(raw);
     end
 end
 
